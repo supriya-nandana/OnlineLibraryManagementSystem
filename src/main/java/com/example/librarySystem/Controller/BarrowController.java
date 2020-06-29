@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.librarySystem.dto.BarrowBooksResponseDto;
 import com.example.librarySystem.dto.BarrowRequestDto;
+import com.example.librarySystem.exception.BookIdMatchException;
 import com.example.librarySystem.exception.BooksNotFoundException;
 import com.example.librarySystem.exception.InvalidBarrowDateException;
 import com.example.librarySystem.exception.MoreBoooksException;
@@ -24,7 +25,7 @@ public class BarrowController {
 	BarrowService barrowService;
 	
 	@PostMapping("/book/{bookId}/barrow")
-	public String barrowBook(@PathVariable("bookId") int bookId,@RequestBody BarrowRequestDto barrowRequestDto) throws InvalidBarrowDateException, MoreBoooksException {
+	public String barrowBook(@PathVariable("bookId") int bookId,@RequestBody BarrowRequestDto barrowRequestDto) throws InvalidBarrowDateException, MoreBoooksException, BookIdMatchException {
 		boolean save=barrowService.saveBarrowDetails(bookId,barrowRequestDto);
 		if(save) {
 			return "barrow book succussfull till one week";
@@ -36,8 +37,14 @@ public class BarrowController {
 	public ResponseEntity<String> exceptionHandler(InvalidBarrowDateException exception){
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
+	
 	@ExceptionHandler(MoreBoooksException.class)
 	public ResponseEntity<String> exceptionHandler(MoreBoooksException exception){
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(BookIdMatchException.class)
+	public ResponseEntity<String> exceptionHandler(BookIdMatchException exception){
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
 	

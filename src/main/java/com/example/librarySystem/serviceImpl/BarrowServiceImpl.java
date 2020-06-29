@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.librarySystem.dao.BarrowDao;
 import com.example.librarySystem.dto.BarrowBooksResponseDto;
 import com.example.librarySystem.dto.BarrowRequestDto;
+import com.example.librarySystem.exception.BookIdMatchException;
 import com.example.librarySystem.exception.BooksNotFoundException;
 import com.example.librarySystem.exception.InvalidBarrowDateException;
 import com.example.librarySystem.exception.MoreBoooksException;
@@ -26,15 +27,21 @@ public class BarrowServiceImpl implements BarrowService {
 	BarrowDao barrowDao;
 
 	@Override
-	public boolean saveBarrowDetails(int bookId, BarrowRequestDto barrowRequestDto) throws InvalidBarrowDateException, MoreBoooksException {
+	public boolean saveBarrowDetails(int bookId, BarrowRequestDto barrowRequestDto) throws InvalidBarrowDateException, MoreBoooksException, BookIdMatchException {
 		LocalDate date;
 		date = LocalDate.now();
 		LocalDate date1 = date.plusDays(1);
 		LocalDate date2 = date.plusDays(2);
-
+        List<Integer> id=barrowDao.findbookIdByuserId(barrowRequestDto.getUserId());
 		Barrow barrow = new Barrow();
-		if (barrowDao.findbookIdByuserId(barrowRequestDto.getUserId()).size() > 3) {
-			barrow.setBookid(bookId);
+		if (id.size() <= 3 ) {
+			if(id.get(0)==bookId || id.get(1)==bookId || id.get(2)==bookId) {
+				throw new BookIdMatchException("same book cannot barrow again");
+			}
+			else {
+				barrow.setBookid(bookId);
+			}
+			
 		} else {
 			throw new MoreBoooksException("user  barrow 3 books only");
 		}
