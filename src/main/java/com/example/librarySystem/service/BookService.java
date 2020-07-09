@@ -1,5 +1,13 @@
 package com.example.librarySystem.service;
 
-public class BookService {
+import java.util.List;
+
+import com.example.librarySystem.dtos.BookRequestDto;
+import com.example.librarySystem.dtos.BookResponseDto;
+
+public interface BookService {
+
+	public List<BookResponseDto> getBooksByauthorNameAndcategoryNameAndbookTitle(BookRequestDto bookrequestDto) ;
+		
 
 }

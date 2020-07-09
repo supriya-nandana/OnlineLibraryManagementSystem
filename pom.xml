@@ -16,6 +16,14 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<sonar.coverage.exclusions>
+        src/main/java/com/example/librarySystem/OnlineLibraryManagementSystemApplication.java,
+        src/main/java/com/example/librarySystem/dao/*.java,
+        src/main/java/com/example/librarySystem/dtos/*.java,
+        src/main/java/com/example/librarySystem/exceptions/*.java,
+        src/main/java/com/example/librarySystem/model/*.java,
+        src/main/java/com/example/librarySystem/service/*.java
+        </sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>
